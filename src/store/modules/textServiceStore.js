@@ -15,7 +15,8 @@ export const mutationsTypes = {
     changeLetterStatus: "[printing] changeLetterStatus",
     clearAllStatuses: "[printing] clearAllStatuses",
 
-    incrementErrors: "[printing] incrementErrors"
+    incrementErrors: "[printing] incrementErrors",
+    resetErrors: "[printing] resetErrors",
 };
 export const actionTypes = {
     getText: "[printing] getText"
@@ -48,6 +49,9 @@ const mutations = {
     },
     [mutationsTypes.incrementErrors]: (state) => {
         state.countErrors++;
+    },
+    [mutationsTypes.resetErrors]: (state) => {
+        state.countErrors = 0;
     }
 };
 
@@ -56,6 +60,7 @@ const actions = {
     [actionTypes.getText](context) {
         return new Promise(() => {
             context.commit(mutationsTypes.getTextStart);
+            context.commit(mutationsTypes.resetErrors);
             serviceApi
                 .getTextService()
                 .then((response) => context.commit(mutationsTypes.getTextSuccess, response.data))

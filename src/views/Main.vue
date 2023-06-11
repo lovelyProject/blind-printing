@@ -32,7 +32,8 @@ const textFromService = computed(() => store.state.textServiceStore?.textFromSer
 const errorPercents = computed(() => (store.state.textServiceStore.countErrors * 100 / textFromService.value.length).toFixed(2));
 const rightPercents = computed(() => {
   return isNaN(Number(errorPercents.value)) ? 100 : 100 - errorPercents.value
-})
+});
+
 const input = ref("");
 const target = ref(null);
 let isErrorAgain = false;
@@ -46,7 +47,12 @@ function onInput(event) {
   //ввод в инпут символа
   const newValue = event.target.value;
 
-
+  //введен весь текст
+  if (textFromService.value.length - 1 === input.value.length) {
+    store.dispatch(actionTypes.getText)
+    target.value.focus();
+    console.log("Конец");
+  }
   //вся строка инпута удалена
   if (newValue === "") {
     input.value = "";
