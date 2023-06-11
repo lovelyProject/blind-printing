@@ -48,7 +48,7 @@ const mutations = {
 
 const actions = {
     [actionTypes.getText](context) {
-        return new Promise((resolve) => {
+        return new Promise(() => {
             context.commit(mutationsTypes.getTextStart);
             serviceApi
                 .getTextService()

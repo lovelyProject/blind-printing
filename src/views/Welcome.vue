@@ -18,6 +18,7 @@ const text = "Набор текста вслепую, или набор текс
     "считается самым эффективным способом научиться печатать на клавиатуре.";
 const logo = "NewGen vision";
 </script>
+
 <style scoped lang="sass">
 .main
   width: 1400px
@@ -37,6 +38,7 @@ const logo = "NewGen vision";
     font-size: 40px
     line-height: 60px
     color: white
+    animation: logo 0.5s ease-in-out
   &__title
     margin-top: 183px
     font-style: normal
@@ -44,6 +46,7 @@ const logo = "NewGen vision";
     font-weight: 800
     font-size: 64px
     line-height: 111.5%
+    animation: title 1.3s ease-in-out
   &__text
     margin-top: 28px
     font-style: normal
@@ -51,4 +54,40 @@ const logo = "NewGen vision";
     max-width: 466px
     font-size: 15px
     line-height: 22px
+    animation: text 1.7s ease-in-out
+
+@keyframes logo
+  0%
+    opacity: 0
+    transform: translateY(-200px)
+
+  100%
+    opacity: 1
+    transform: translateY(0)
+
+@keyframes title
+  0%
+    opacity: 0
+    transform: translateX(-200px)
+  100%
+    opacity: 1
+    transform: translateX(0)
+
+@keyframes text
+  0%
+    opacity: 0
+    transform: translateX(200px)
+  100%
+    opacity: 1
+    transform: translateX(0)
+
+@media screen and (width < 1400px)
+  .main
+    width: 1200px
+@media screen and (width < 1200px)
+  .main
+    width: 900px
+    &__title,
+    &__text
+      text-shadow: 3px 3px 3px #000
 </style>
