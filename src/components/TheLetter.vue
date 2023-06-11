@@ -27,11 +27,10 @@ $green-regular: #2ED47A
 $red-regular: #F7685B
 
 .letter
-  border-radius: 50%
   text-align: center
   transition: color .2s ease-in-out
   &_correct
-    color: $green-regular
+    background-color: $green-regular
   &_error
-    color: $red-regular
+    background-color: $red-regular
 </style>

@@ -11,19 +11,25 @@ div.flex
       )
   .stats
     .stats__item
-      h4.item-title Точность
+      .item__header
+        img(:src="Aim" class="stats__icon" alt="Точность")
+        h4.item-title Точность
       span.item-text {{ rightPercents }}%
     .stats__item
       .item__header
+        img(:src="Speed" class="stats__icon" alt="Скорость")
         h4.item-title Скорость
-        img
       span.item-text {{ speed }} зн/мин
+    the-button(@resetEverything="resetEverything") Заново
 </template>
 
 <script setup>
 //component
 import TheLetter  from "@/components/TheLetter.vue";
+import TheButton from "@/components/ui/TheButton.vue";
 //icons
+import Aim from "@/assets/icons/aim.svg";
+import Speed from "@/assets/icons/speed.svg";
 
 import { onMounted, ref, computed } from "vue";
 import { actionTypes, mutationsTypes } from "@/store/modules/textServiceStore.js";
@@ -54,13 +60,18 @@ function getSpeed() {
   return Number(input.value.length * 60 / getDifferenceInSeconds());
 }
 
+function resetEverything() {
+  clearInterval(timer);
+  input.value = "";
+  speed.value = "0";
+  store.dispatch(actionTypes.getText);
+}
 onMounted(() => {
   store.dispatch(actionTypes.getText)
   target.value.focus();
 });
 
 function onInput(event) {
-  //ввод в инпут символа
   const newValue = event.target.value;
 
   //введен весь текст
@@ -80,14 +91,13 @@ function onInput(event) {
 
   const idx = newValue.length - 1;
   input.value = newValue;
+
 //Если значения не совпадают, то в инпут ничего не вводится
   if (textState.value[idx].value.toLowerCase() !== newValue[idx].toLowerCase()) {
     input.value = newValue.slice(0, -1);
 
     if (!isErrorAgain) {
-
       isErrorAgain = true;
-      console.log("Err again");
       store.commit(mutationsTypes.incrementErrors);
       return;
     }
@@ -99,6 +109,8 @@ function onInput(event) {
     target.value.focus();
     return null;
   }
+
+  //запуск счетчика и вычисления скорости
   if (input.value.length === 1) {
     store.commit(mutationsTypes.setStartTime);
 
@@ -116,7 +128,7 @@ function onInput(event) {
 }
 </script>
 
-<style scoped lang="sass">
+<style scoped lang="sass" >
 .flex
   display: flex
   margin: 20px auto
@@ -139,9 +151,12 @@ function onInput(event) {
     caret-color: transparent
     outline: 0
     position: absolute
+    top: 0
+    left: 0
     width: 100vw
     height: 100vh
     cursor: default
+    z-index: -1
 .stats
   padding: 20px
   flex-basis: 20%
@@ -152,6 +167,8 @@ function onInput(event) {
     border-radius: 5px
     &:first-child
       margin-bottom: 20px
+  &__icon
+      width: 30px
 .item
   display: flex
   text-align: center
@@ -159,8 +176,15 @@ function onInput(event) {
   &-title
     text-align: center
     color: black
+    font-size: 20px
   &-text
     display: block
     text-align: center
     color: black
+    font-size: 24px
+  &__header
+    display: flex
+    flex-wrap: nowrap
+    gap: 5px
+    margin-bottom: 15px
 </style>
