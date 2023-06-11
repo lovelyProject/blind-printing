@@ -1,7 +1,7 @@
 <template lang="pug">
 .text
-  template(v-if="text")
-    span.text__item(v-for="(letter,idx) in text" :key="idx") {{ letter }}
+  template(v-if="textState")
+    the-letter(v-for="(letter, idx) in textState" :key="idx") {{ letter.value }}
 input.text__target(
   type="text"
   id="inp"
@@ -11,6 +11,9 @@ input.text__target(
 </template>
 
 <script setup>
+//component
+import TheLetter  from "@/components/TheLetter.vue";
+
 import { onMounted, ref, computed, watch } from "vue";
 import { actionTypes } from "@/store/modules/textServiceStore.js";
 import { useStore } from 'vuex'
@@ -19,8 +22,8 @@ const store = useStore();
 
 onMounted(() => {
   store.dispatch(actionTypes.getText)
-})
-const text = computed(() => store.state.textServiceStore?.textFromService)
+});
+
 const textState = computed(() => store.state.textServiceStore?.textState)
 const input = ref("");
 
@@ -50,5 +53,5 @@ function onInput(event) {
   padding: 20px
   font-size: 22px
   border-radius: 5px
-  letter-spacing: 4px
+  letter-spacing: 8px
 </style>
