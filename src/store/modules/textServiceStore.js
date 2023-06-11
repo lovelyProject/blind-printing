@@ -10,6 +10,9 @@ export const mutationsTypes = {
     getTextStart: "[printing] getTextStart",
     getTextSuccess: "[printing] getTextSuccess",
     getTextFailure: "[printing] getTextFailure",
+
+    changeLetterStatus: "[printing] changeLetterStatus",
+    clearAllStatuses: "[printing] clearAllStatuses"
 };
 export const actionTypes = {
     getText: "[printing] getText"
@@ -30,6 +33,15 @@ const mutations = {
     },
     [mutationsTypes.getTextFailure]: (state) => {
         state.isLoading = false;
+    },
+    [mutationsTypes.clearAllStatuses]: (state) => {
+        for (const key in state.textState) {
+            state.textState[key].status = 'no-touch';
+        }
+    },
+    [mutationsTypes.changeLetterStatus]: (state, payload) => {
+        const idx = payload.index;
+        state.textState[idx].status = payload.status;
     }
 };
 

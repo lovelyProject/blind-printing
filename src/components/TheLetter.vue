@@ -10,7 +10,7 @@ import { computed } from "vue";
 const props = defineProps({
   status: {
     type: String,
-    default: ""
+    required: true
   },
 });
 
@@ -29,6 +29,7 @@ $red-regular: #F7685B
 .letter
   border-radius: 50%
   text-align: center
+  transition: color .2s ease-in-out
   &_correct
     color: $green-regular
   &_error
