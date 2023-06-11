@@ -14,29 +14,45 @@ div.flex
       h4.item-title Точность
       span.item-text {{ rightPercents }}%
     .stats__item
-      h4.item-title Скорость
-      span.item-text 0 зн/мин
+      .item__header
+        h4.item-title Скорость
+        img
+      span.item-text {{ speed }} зн/мин
 </template>
 
 <script setup>
 //component
 import TheLetter  from "@/components/TheLetter.vue";
+//icons
 
 import { onMounted, ref, computed } from "vue";
 import { actionTypes, mutationsTypes } from "@/store/modules/textServiceStore.js";
 import { useStore } from 'vuex'
 
+const input = ref("");
+const target = ref(null);
+const speed = ref("0");
+let timer;
+let isErrorAgain = false;
+
 const store = useStore();
 const textState = computed(() => store.state.textServiceStore?.textState);
 const textFromService = computed(() => store.state.textServiceStore?.textFromService);
+//100 значение точности по умолчанию
 const errorPercents = computed(() => (store.state.textServiceStore.countErrors * 100 / textFromService.value.length).toFixed(2));
 const rightPercents = computed(() => {
   return isNaN(Number(errorPercents.value)) ? 100 : 100 - errorPercents.value
 });
 
-const input = ref("");
-const target = ref(null);
-let isErrorAgain = false;
+const startPrintingTime = computed(() => store.state.textServiceStore.startPrintingTime);
+
+//1000 - кол-во милисекунд в 1 секунде, цифра 1 - чтобы не делить на 0
+function getDifferenceInSeconds() {
+  return startPrintingTime.value ? Math.round((new Date().getTime() - startPrintingTime.value) / 1000) : 1;
+}
+function getSpeed() {
+  return Number(input.value.length * 60 / getDifferenceInSeconds());
+}
 
 onMounted(() => {
   store.dispatch(actionTypes.getText)
@@ -49,9 +65,9 @@ function onInput(event) {
 
   //введен весь текст
   if (textFromService.value.length - 1 === input.value.length) {
-    store.dispatch(actionTypes.getText)
+    store.dispatch(actionTypes.getText);
+    input.value = "";
     target.value.focus();
-    console.log("Конец");
   }
   //вся строка инпута удалена
   if (newValue === "") {
@@ -82,6 +98,13 @@ function onInput(event) {
     });
     target.value.focus();
     return null;
+  }
+  if (input.value.length === 1) {
+    store.commit(mutationsTypes.setStartTime);
+
+    timer = setInterval(() => {
+      speed.value = Math.round(getSpeed());
+    }, 1000);
   }
 
   isErrorAgain = false;

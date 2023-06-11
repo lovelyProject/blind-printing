@@ -5,6 +5,7 @@ const state = {
     textState: {},
     isLoading: null,
     countErrors: 0,
+    startPrintingTime: null,
 };
 
 export const mutationsTypes = {
@@ -17,6 +18,7 @@ export const mutationsTypes = {
 
     incrementErrors: "[printing] incrementErrors",
     resetErrors: "[printing] resetErrors",
+    setStartTime: "[printing] setStartTime"
 };
 export const actionTypes = {
     getText: "[printing] getText"
@@ -52,6 +54,9 @@ const mutations = {
     },
     [mutationsTypes.resetErrors]: (state) => {
         state.countErrors = 0;
+    },
+    [mutationsTypes.setStartTime]: (state) => {
+        state.startPrintingTime = new Date().getTime();
     }
 };
 
