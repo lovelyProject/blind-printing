@@ -35,6 +35,7 @@ const rightPercents = computed(() => {
 })
 const input = ref("");
 const target = ref(null);
+let isErrorAgain = false;
 
 onMounted(() => {
   store.dispatch(actionTypes.getText)
@@ -61,7 +62,14 @@ function onInput(event) {
   if (textState.value[idx].value.toLowerCase() !== newValue[idx].toLowerCase()) {
     input.value = newValue.slice(0, -1);
 
-    store.commit(mutationsTypes.incrementErrors);
+    if (!isErrorAgain) {
+
+      isErrorAgain = true;
+      console.log("Err again");
+      store.commit(mutationsTypes.incrementErrors);
+      return;
+    }
+
     store.commit(mutationsTypes.changeLetterStatus, {
       index: idx,
       status: "error"
@@ -70,6 +78,7 @@ function onInput(event) {
     return null;
   }
 
+  isErrorAgain = false;
   store.commit(mutationsTypes.changeLetterStatus, {
     index: idx,
     status: "correct"
