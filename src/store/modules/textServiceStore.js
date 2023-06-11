@@ -4,6 +4,7 @@ const state = {
     textFromService: [],
     textState: {},
     isLoading: null,
+    countErrors: 0,
 };
 
 export const mutationsTypes = {
@@ -12,7 +13,9 @@ export const mutationsTypes = {
     getTextFailure: "[printing] getTextFailure",
 
     changeLetterStatus: "[printing] changeLetterStatus",
-    clearAllStatuses: "[printing] clearAllStatuses"
+    clearAllStatuses: "[printing] clearAllStatuses",
+
+    incrementErrors: "[printing] incrementErrors"
 };
 export const actionTypes = {
     getText: "[printing] getText"
@@ -42,6 +45,9 @@ const mutations = {
     [mutationsTypes.changeLetterStatus]: (state, payload) => {
         const idx = payload.index;
         state.textState[idx].status = payload.status;
+    },
+    [mutationsTypes.incrementErrors]: (state) => {
+        state.countErrors++;
     }
 };
 

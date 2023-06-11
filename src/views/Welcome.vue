@@ -55,7 +55,6 @@ const logo = "NewGen vision";
     font-size: 15px
     line-height: 22px
     animation: text 1.7s ease-in-out
-
 @keyframes logo
   0%
     opacity: 0

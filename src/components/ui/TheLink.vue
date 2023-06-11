@@ -1,5 +1,8 @@
 <template lang="pug">
-a.link(href="google.com") Начать
+router-link(
+  class="link"
+  :to="{name: 'Main'}"
+) Начать
 </template>
 
 <style lang="sass">
