@@ -9,6 +9,7 @@ div.flex
         ref="target"
         @input="onInput"
       )
+    app-loader(v-if="isLoading")
   .stats
     .stats__item
       .item__header
@@ -27,6 +28,7 @@ div.flex
 //component
 import TheLetter  from "@/components/TheLetter.vue";
 import TheButton from "@/components/ui/TheButton.vue";
+import AppLoader from "@/components/ui/AppLoader.vue";
 //icons
 import Aim from "@/assets/icons/aim.svg";
 import Speed from "@/assets/icons/speed.svg";
@@ -42,6 +44,7 @@ let timer;
 let isErrorAgain = false;
 
 const store = useStore();
+const isLoading = computed(() => store.state.textServiceStore.isLoading);
 const textState = computed(() => store.state.textServiceStore?.textState);
 const textFromService = computed(() => store.state.textServiceStore?.textFromService);
 //100 значение точности по умолчанию
@@ -142,6 +145,7 @@ function onInput(event) {
   font-size: 22px
   border-radius: 5px
   letter-spacing: 5px
+  position: relative
   &__target
     font-size: 16px
     overflow: hidden

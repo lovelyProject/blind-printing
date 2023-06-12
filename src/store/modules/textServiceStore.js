@@ -18,7 +18,9 @@ export const mutationsTypes = {
 
     incrementErrors: "[printing] incrementErrors",
     resetErrors: "[printing] resetErrors",
-    setStartTime: "[printing] setStartTime"
+    setStartTime: "[printing] setStartTime",
+
+    resetEverything: "[printing] resetEverything"
 };
 export const actionTypes = {
     getText: "[printing] getText"
@@ -57,6 +59,10 @@ const mutations = {
     },
     [mutationsTypes.setStartTime]: (state) => {
         state.startPrintingTime = new Date().getTime();
+    },
+    [mutationsTypes.resetEverything]: (state) => {
+        state.textState = {};
+        state.textFromService = [];
     }
 };
 
@@ -66,6 +72,7 @@ const actions = {
         return new Promise(() => {
             context.commit(mutationsTypes.getTextStart);
             context.commit(mutationsTypes.resetErrors);
+            context.commit(mutationsTypes.resetEverything);
             serviceApi
                 .getTextService()
                 .then((response) => context.commit(mutationsTypes.getTextSuccess, response.data))
