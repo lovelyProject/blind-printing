@@ -3,9 +3,10 @@ main.main
   .main__container
     .main__header
       h2.main__logo {{ logo }}
+      //hero
     section.main__section
-       h1.main__title {{ title }}
-       p.main__text {{ text }}
+       h1.main__title {{ TITLE }}
+       p.main__text {{ TEXT }}
        router-link(
         class="main__link"
         :to="{name: 'Main'}"
@@ -17,8 +18,8 @@ main.main
 //components
 import AppButton from "@/components/ui/AppButton.vue";
 
-const title = "Учись набирать текст на клавиатуре вслепую";
-const text = "Набор текста вслепую, или набор текста всеми десятью пальцами, не глядя на клавиатуру, " +
+const TITLE = "Учись набирать текст на клавиатуре вслепую";
+const TEXT = "Набор текста вслепую, или набор текста всеми десятью пальцами, не глядя на клавиатуру, " +
     "считается самым эффективным способом научиться печатать на клавиатуре.";
 const logo = "NewGen vision";
 </script>
@@ -36,13 +37,6 @@ const logo = "NewGen vision";
     position: relative
     padding: 41px 49px 50px 65px
     background: url("@/assets/images/human.png") bottom right / auto no-repeat
-  &__logo
-    font-style: normal
-    font-weight: 900
-    font-size: 40px
-    line-height: 60px
-    color: white
-    animation: logo 0.5s ease-in-out
   &__title
     margin-top: 183px
     font-style: normal
@@ -59,6 +53,13 @@ const logo = "NewGen vision";
     font-size: 15px
     line-height: 22px
     animation: text 1.7s ease-in-out
+  &__logo
+    font-style: normal
+    font-weight: 900
+    font-size: 40px
+    line-height: 60px
+    color: white
+    animation: logo 0.5s ease-in-out
   &__link
     display: inline-block
     text-decoration: none

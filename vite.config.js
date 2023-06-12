@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import path from 'path';
+import path from 'path'
 
 export default defineConfig({
     base: "blind-printing",
@@ -13,10 +13,8 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `
-              @import "./src/assets/variables/index.scss";
-            `,
-      },
+        additionalData: `@import "@/assets/styles/index.scss" as global`
+      }
     },
   },
 })

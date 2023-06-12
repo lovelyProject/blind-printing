@@ -2,7 +2,7 @@
 div.flex
   .text
     template(v-if="textState")
-      the-letter(v-for="(letter, idx) in textState" :key="idx" :status="letter.status") {{ letter.value }}
+      the-letter(v-for="({status, value}, index) in textState" :key="index" :status="status") {{ value }}
       input.text__target(
           type="text"
           :value="input"
@@ -15,7 +15,7 @@ div.flex
       .item__header
         img(:src="Aim" class="stats__icon" alt="Точность")
         h4.item-title Точность
-      span.item-text {{ rightPercents }}%
+      span.item-text {{ accuracy }}%
     .stats__item
       .item__header
         img(:src="Speed" class="stats__icon" alt="Скорость")
@@ -24,7 +24,7 @@ div.flex
     the-button(@resetEverything="resetEverything") Заново
     teleport(to="body")
       transition
-        the-modal(v-if="isShowModal" :cardsState="cardsState" @resetEverything="resetEverything")
+        the-modal(v-if="isModal" :cardsState="cardsState" @resetEverything="resetEverything")
 </template>
 
 <script setup>
@@ -74,7 +74,7 @@ const target = ref(null);
 const speed = ref("0");
 let timer;
 let isErrorAgain = false;
-let isShowModal = ref(false);
+let isModal = ref(false);
 
 const store = useStore();
 const isLoading = computed(() => store.state.textServiceStore.isLoading);
@@ -82,7 +82,7 @@ const textState = computed(() => store.state.textServiceStore?.textState);
 const textFromService = computed(() => store.state.textServiceStore?.textFromService);
 //100 значение точности по умолчанию
 const errorPercents = computed(() => (store.state.textServiceStore.countErrors * 100 / textFromService.value.length).toFixed(2));
-const rightPercents = computed(() => {
+const accuracy = computed(() => {
   return isNaN(Number(errorPercents.value)) ? 100 : 100 - errorPercents.value
 });
 
@@ -100,7 +100,7 @@ function resetEverything() {
   clearInterval(timer);
   input.value = "";
   speed.value = "0";
-  isShowModal.value = false;
+  isModal.value = false;
 
   store.dispatch(actionTypes.getText);
   target.value.focus();
@@ -117,10 +117,10 @@ function onInput(event) {
   if (textFromService.value.length - 1 === input.value.length) {
     clearInterval(timer);
     cardsState.time.value = getDifferenceInSeconds();
-    cardsState.accuracy.value = rightPercents.value;
+    cardsState.accuracy.value = accuracy.value;
     cardsState.speed.value = speed.value;
 
-    isShowModal.value = true
+    isModal.value = true
     // store.dispatch(actionTypes.getText);
     // input.value = "";
     // target.value.focus();

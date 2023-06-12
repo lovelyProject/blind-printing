@@ -1,1 +1,5 @@
-$dark-blue: #123553;
+@forward "./fonts/index.scss";
+
+body {
+  background-color: red;
+}
