@@ -1,47 +1,51 @@
-<template lang="pug">
-div.flex
-  .text
-    template(v-if="textState")
-      the-letter(v-for="(letter, idx) in textState" :key="idx" :status="letter.status") {{ letter.value }}
-      input.text__target(
-        type="text"
-        :value="input"
-        ref="target"
-        @input="onInput"
-      )
-    app-loader(v-if="isLoading")
-  .stats
-    .stats__item
-      .item__header
-        img(:src="Aim" class="stats__icon" alt="Точность")
-        h4.item-title Точность
-      span.item-text {{ rightPercents }}%
-    .stats__item
-      .item__header
-        img(:src="Speed" class="stats__icon" alt="Скорость")
-        h4.item-title Скорость
-      span.item-text {{ speed }} зн/мин
-    the-button(@resetEverything="resetEverything") Заново
-</template>
-
 <script setup>
 //component
 import TheLetter  from "@/components/TheLetter.vue";
-import TheButton from "@/components/ui/TheButton.vue";
+import TheButton from "@/components/ui/AppButton.vue";
 import AppLoader from "@/components/ui/AppLoader.vue";
+import TheModal from "@/components/modals/TheModal.vue";
 //icons
 import Aim from "@/assets/icons/aim.svg";
 import Speed from "@/assets/icons/speed.svg";
+import Time from "@/assets/icons/time.svg";
 
 import { onMounted, ref, computed } from "vue";
 import { actionTypes, mutationsTypes } from "@/store/modules/textServiceStore.js";
 import { useStore } from 'vuex'
+
+const cardsState = {
+  accuracy:  {
+    id: 1,
+    title: "Точность",
+    icon: Aim,
+    alt: "Точность",
+    measure: "%",
+    value: 0
+  },
+  speed: {
+    id: 2,
+    title: "Скорость",
+    icon: Speed,
+    alt: "Скорость",
+    measure: "зн/м",
+    value: 0
+  },
+  time: {
+    id: 3,
+    title: "Время",
+    icon: Time,
+    alt: "Время",
+    measure: "cек",
+    value: 0
+  }
+}
 
 const input = ref("");
 const target = ref(null);
 const speed = ref("0");
 let timer;
 let isErrorAgain = false;
+let isShowModal = ref(false);
 
 const store = useStore();
 const isLoading = computed(() => store.state.textServiceStore.isLoading);
@@ -67,7 +71,10 @@ function resetEverything() {
   clearInterval(timer);
   input.value = "";
   speed.value = "0";
+  isShowModal.value = false;
+
   store.dispatch(actionTypes.getText);
+  target.value.focus();
 }
 onMounted(() => {
   store.dispatch(actionTypes.getText)
@@ -79,9 +86,15 @@ function onInput(event) {
 
   //введен весь текст
   if (textFromService.value.length - 1 === input.value.length) {
-    store.dispatch(actionTypes.getText);
-    input.value = "";
-    target.value.focus();
+    clearInterval(timer);
+    cardsState.time.value = getDifferenceInSeconds();
+    cardsState.accuracy.value = rightPercents.value;
+    cardsState.speed.value = speed.value;
+
+    isShowModal.value = true
+    // store.dispatch(actionTypes.getText);
+    // input.value = "";
+    // target.value.focus();
   }
   //вся строка инпута удалена
   if (newValue === "") {
@@ -101,14 +114,14 @@ function onInput(event) {
 
     if (!isErrorAgain) {
       isErrorAgain = true;
+      store.commit(mutationsTypes.changeLetterStatus, {
+        index: idx,
+        status: "error"
+      });
       store.commit(mutationsTypes.incrementErrors);
       return;
     }
 
-    store.commit(mutationsTypes.changeLetterStatus, {
-      index: idx,
-      status: "error"
-    });
     target.value.focus();
     return null;
   }
@@ -131,7 +144,36 @@ function onInput(event) {
 }
 </script>
 
-<style scoped lang="sass" >
+<template lang="pug">
+div.flex
+  .text
+    template(v-if="textState")
+      the-letter(v-for="(letter, idx) in textState" :key="idx" :status="letter.status") {{ letter.value }}
+      input.text__target(
+        type="text"
+        :value="input"
+        ref="target"
+        @input="onInput"
+      )
+    app-loader(v-if="isLoading")
+  .stats
+    .stats__item
+      .item__header
+        img(:src="Aim" class="stats__icon" alt="Точность")
+        h4.item-title Точность
+      span.item-text {{ rightPercents }}%
+    .stats__item
+      .item__header
+        img(:src="Speed" class="stats__icon" alt="Скорость")
+        h4.item-title Скорость
+      span.item-text {{ speed }} зн/мин
+    the-button(@resetEverything="resetEverything") Заново
+    teleport(to="body")
+      transition
+        the-modal(v-if="isShowModal" :cardsState="cardsState" @resetEverything="resetEverything")
+</template>
+
+<style lang="sass" >
 .flex
   display: flex
   margin: 20px auto
@@ -191,4 +233,14 @@ function onInput(event) {
     flex-wrap: nowrap
     gap: 5px
     margin-bottom: 15px
+.v-enter-active,
+.v-leave-active
+  transition: opacity 0.1s ease-in-out
+
+
+.v-enter-from,
+.v-leave-to
+  opacity: 0
+
+
 </style>
