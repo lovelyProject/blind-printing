@@ -3,12 +3,12 @@ import Welcome from "@/views/Welcome.vue";
 
 const routes = [
     {
-        path: "/",
+        path: "/blind-printing",
         name: "Welcome",
         component: Welcome
     },
     {
-        path: "/main",
+        path: "/blind-printing/main",
         name: "Main",
         component: () => import("@/views/Main.vue")
     }
