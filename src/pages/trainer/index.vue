@@ -1,3 +1,32 @@
+<template lang="pug">
+div.flex
+  .text
+    template(v-if="textState")
+      the-letter(v-for="(letter, idx) in textState" :key="idx" :status="letter.status") {{ letter.value }}
+      input.text__target(
+          type="text"
+          :value="input"
+          ref="target"
+          @input="onInput"
+      )
+    app-loader(v-if="isLoading")
+  .stats
+    .stats__item
+      .item__header
+        img(:src="Aim" class="stats__icon" alt="Точность")
+        h4.item-title Точность
+      span.item-text {{ rightPercents }}%
+    .stats__item
+      .item__header
+        img(:src="Speed" class="stats__icon" alt="Скорость")
+        h4.item-title Скорость
+      span.item-text {{ speed }} зн/мин
+    the-button(@resetEverything="resetEverything") Заново
+    teleport(to="body")
+      transition
+        the-modal(v-if="isShowModal" :cardsState="cardsState" @resetEverything="resetEverything")
+</template>
+
 <script setup>
 //component
 import TheLetter  from "@/components/TheLetter.vue";
@@ -10,7 +39,7 @@ import Speed from "@/assets/icons/speed.svg";
 import Time from "@/assets/icons/time.svg";
 
 import { onMounted, ref, computed } from "vue";
-import { actionTypes, mutationsTypes } from "@/store/modules/textServiceStore.js";
+import { actionTypes, mutationsTypes } from "@/store/modules/trainerStore.js";
 import { useStore } from 'vuex'
 
 const cardsState = {
@@ -144,35 +173,6 @@ function onInput(event) {
 }
 </script>
 
-<template lang="pug">
-div.flex
-  .text
-    template(v-if="textState")
-      the-letter(v-for="(letter, idx) in textState" :key="idx" :status="letter.status") {{ letter.value }}
-      input.text__target(
-        type="text"
-        :value="input"
-        ref="target"
-        @input="onInput"
-      )
-    app-loader(v-if="isLoading")
-  .stats
-    .stats__item
-      .item__header
-        img(:src="Aim" class="stats__icon" alt="Точность")
-        h4.item-title Точность
-      span.item-text {{ rightPercents }}%
-    .stats__item
-      .item__header
-        img(:src="Speed" class="stats__icon" alt="Скорость")
-        h4.item-title Скорость
-      span.item-text {{ speed }} зн/мин
-    the-button(@resetEverything="resetEverything") Заново
-    teleport(to="body")
-      transition
-        the-modal(v-if="isShowModal" :cardsState="cardsState" @resetEverything="resetEverything")
-</template>
-
 <style lang="sass" >
 .flex
   display: flex
@@ -214,7 +214,7 @@ div.flex
     &:first-child
       margin-bottom: 20px
   &__icon
-      width: 30px
+    width: 30px
 .item
   display: flex
   text-align: center

@@ -1,16 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Welcome from "@/views/Welcome.vue";
 
 const routes = [
     {
         path: "/blind-printing",
         name: "Welcome",
-        component: Welcome
+        component: () => import("@/pages/main/index.vue")
     },
     {
         path: "/blind-printing/main",
         name: "Main",
-        component: () => import("@/views/Main.vue")
+        component: () => import("@/pages/trainer/index.vue")
     }
 ];
 

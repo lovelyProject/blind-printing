@@ -5,6 +5,7 @@
 </template>
 
 <script setup>
+
 const emits = defineEmits(['resetEverything']);
 
 function onButton() {
@@ -14,6 +15,10 @@ function onButton() {
 
 <style scoped lang="sass">
 $orange: #F57359
+$black: #000
+$white: #fff
+$gray: #999
+
 .button
   display: flex
   justify-content: center
@@ -32,7 +37,7 @@ $orange: #F57359
       transform: translateY(2px)
     &:hover
       color: $orange
-      background-color: #fff
+      background-color: $white
       border-color: $orange
       box-shadow: 0 0 20px 0 $orange
 </style>

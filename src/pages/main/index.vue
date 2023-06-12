@@ -4,14 +4,18 @@ main.main
     .main__header
       h2.main__logo {{ logo }}
     section.main__section
-      h1.main__title {{ title }}
-      p.main__text {{ text }}
-      the-link
+       h1.main__title {{ title }}
+       p.main__text {{ text }}
+       router-link(
+        class="main__link"
+        :to="{name: 'Main'}"
+        )
+         app-button Начать
 </template>
 
 <script setup>
 //components
-import TheLink from "@/components/ui/TheLink.vue";
+import AppButton from "@/components/ui/AppButton.vue";
 
 const title = "Учись набирать текст на клавиатуре вслепую";
 const text = "Набор текста вслепую, или набор текста всеми десятью пальцами, не глядя на клавиатуру, " +
@@ -55,6 +59,9 @@ const logo = "NewGen vision";
     font-size: 15px
     line-height: 22px
     animation: text 1.7s ease-in-out
+  &__link
+    display: inline-block
+    text-decoration: none
 @keyframes logo
   0%
     opacity: 0
@@ -88,5 +95,5 @@ const logo = "NewGen vision";
     width: 900px
     &__title,
     &__text
-      text-shadow: 3px 3px 3px #000
+      text-shadow: 3px 3px 3px white
 </style>

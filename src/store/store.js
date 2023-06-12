@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import textServiceStore from "@/store/modules/textServiceStore";
+import textServiceStore from "@/store/modules/trainerStore.js";
 
 
 const store = createStore({
