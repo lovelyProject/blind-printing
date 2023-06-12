@@ -1,6 +1,7 @@
 ## blind-printing
 # Приложение-тренажер слепой печати
 
+# Сделано по аналогии с https://www.ratatype.com/ru/typing-test/test/
 
 # Запуск проекта локально
 
