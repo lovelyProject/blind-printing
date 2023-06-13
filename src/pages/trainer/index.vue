@@ -49,59 +49,31 @@ import { useStore } from 'vuex'
 
 const store = useStore();
 
-
-const isLoading = computed(() => store.state.textServiceStore.isLoading);
-const letters = computed(() => store.state.textServiceStore?.letters);
-const lettersArray = computed(() => store.state.textServiceStore?.lettersArray);
+const cards = computed(() => store.state.trainer.cards);
+const isError = computed(() => store.state.trainer.isError);
+const isModal = computed(() => store.state.trainer.isModal);
+const isLoading = computed(() => store.state.trainer.isLoading);
+const letters = computed(() => store.state.trainer?.letters);
+const lettersArray = computed(() => store.state.trainer?.lettersArray);
 //100 значение точности по умолчанию
 const error = computed(() => {
-  return (store.state.textServiceStore.countErrors * 100 / lettersArray.value.length).toFixed(2)
+  return (store.state.trainer.countErrors * 100 / lettersArray.value.length).toFixed(2)
 });
 const accuracy = computed(() => {
   return isNaN(Number(error.value)) ? 100 : 100 - error.value
 });
-
-const startPrintingTime = computed(() => store.state.textServiceStore.startPrintingTime);
-
-const cards = {
-  accuracy:  {
-    id: 1,
-    title: "Точность",
-    icon: Aim,
-    alt: "Точность",
-    measure: "%",
-    value: 0
-  },
-  speed: {
-    id: 2,
-    title: "Скорость",
-    icon: Speed,
-    alt: "Скорость",
-    measure: "зн/м",
-    value: 0
-  },
-  time: {
-    id: 3,
-    title: "Время",
-    icon: Time,
-    alt: "Время",
-    measure: "cек",
-    value: 0
-  }
-}
+const startPrintingTime = computed(() => store.state.trainer.startPrintingTime);
 
 const input = ref("");
 const inputElement = ref(null);
 const speed = ref("0");
 let timer;
-let isError = false;
-let isModal = ref(false);
 
 function reset() {
   clearInterval(timer);
   input.value = "";
   speed.value = "0";
-  isModal.value = false;
+  store.commit(mutationsTypes.toggleModal, false);
 
   store.dispatch(actionTypes.getText);
   inputElement.value.focus();
@@ -118,11 +90,11 @@ function onInput(event) {
   //введен весь текст
   if (lettersArray.value.length - 1 === input.value.length) {
     clearInterval(timer);
-    cards.time.value = getDifferenceInSeconds(startPrintingTime.value);
-    cards.accuracy.value = accuracy.value;
-    cards.speed.value = speed.value;
+    store.commit(mutationsTypes.set_time, getDifferenceInSeconds(startPrintingTime.value));
+    store.commit(mutationsTypes.set_accuracy, accuracy.value)
+    store.commit(mutationsTypes.set_speed, speed.value)
 
-    isModal.value = true
+    store.commit(mutationsTypes.toggleModal, true);
   }
 
   //вся строка инпута удалена
@@ -141,12 +113,13 @@ function onInput(event) {
   if (letters.value[idx].value !== newValue[idx]) {
     input.value = newValue.slice(0, -1);
 
-    if (!isError) {
-      isError = true;
+    if (!isError.value) {
+      store.commit(mutationsTypes.isErrorToggle, true);
       store.commit(mutationsTypes.changeLetterStatus, {
         index: idx,
         status: "error"
       });
+
       store.commit(mutationsTypes.incrementErrors);
       return;
     }
@@ -164,11 +137,12 @@ function onInput(event) {
     }, 1000);
   }
 
-  isError = false;
+  store.commit(mutationsTypes.isErrorToggle, false);
   store.commit(mutationsTypes.changeLetterStatus, {
     index: idx,
     status: "correct"
   });
+
   inputElement.value.focus();
 }
 </script>

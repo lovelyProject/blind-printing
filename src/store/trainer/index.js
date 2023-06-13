@@ -34,7 +34,12 @@ const state = {
             measure: "cек",
             value: 0
         }
-    }
+    },
+    input: "",
+    timer: null,
+    isModal: false,
+    isError: false,
+    speed: "0",
 };
 
 export const mutationsTypes = {
@@ -49,7 +54,15 @@ export const mutationsTypes = {
     resetErrors: "[printing] resetErrors",
     setStartTime: "[printing] setStartTime",
 
-    reset: "[printing] reset"
+    reset: "[printing] reset",
+
+    set_accuracy: "[printing] set accuracy",
+    set_time: "[printing] set time",
+    set_speed: "[printing] set speed",
+
+    toggleModal: "[printing] toggleModal",
+
+    isErrorToggle: "[printing] isErrorToggle",
 };
 export const actionTypes = {
     getText: "[printing] getText"
@@ -92,6 +105,21 @@ const mutations = {
     [mutationsTypes.reset]: (state) => {
         state.letters = {};
         state.lettersArray = [];
+    },
+    [mutationsTypes.set_accuracy]: (state, payload) => {
+        state.cards.accuracy.value = payload;
+    },
+    [mutationsTypes.set_time]: (state, payload) => {
+        state.cards.time.value = payload;
+    },
+    [mutationsTypes.set_speed]: (state, payload) => {
+        state.cards.speed.value = payload;
+    },
+    [mutationsTypes.toggleModal]: (state, payload) => {
+        state.isModal = payload;
+    },
+    [mutationsTypes.isErrorToggle]: (state, payload) => {
+        state.isError = payload;
     }
 };
 
