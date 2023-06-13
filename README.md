@@ -27,3 +27,5 @@
 - master (продакшн)*
 - gh-pages (для деплоя)*
 
+![enter](https://github.com/lovelyProject/blind-printing/assets/109457187/604196cf-2d43-481d-9cd7-d4d63faadb3a)
+![congrats](https://github.com/lovelyProject/blind-printing/assets/109457187/7ffeeb99-e85c-4744-8bb7-059f9abcadf5)
