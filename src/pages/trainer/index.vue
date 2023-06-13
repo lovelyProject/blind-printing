@@ -1,30 +1,31 @@
 <template lang="pug">
-section.flex
-  main.text
-    template(v-if="textState")
+layout
+  main.trainer
+  section.trainer__hero
+    main.trainer__text(v-if="textState")
       the-letter(v-for="({status, value}, index) in textState" :key="index" :status="status") {{ value }}
-      input.text__target(
+      input.trainer__target(
           type="text"
           :value="input"
-          ref="target"
+          ref="trainer__input"
           @input="onInput"
       )
-    app-loader(v-if="isLoading")
-  aside.stats
-    .stats__item
-      .item__header
-        img(:src="Aim" class="stats__icon" alt="Точность")
-        h4.item-title Точность
-      span.item-text {{ accuracy }}%
-    .stats__item
-      .item__header
-        img(:src="Speed" class="stats__icon" alt="Скорость")
-        h4.item-title Скорость
-      span.item-text {{ speed }} зн/мин
-    the-button(@resetEverything="resetEverything") Заново
-    teleport(to="body")
-      transition
-        the-modal(v-if="isModal" :cardsState="cardsState" @resetEverything="resetEverything")
+      app-loader(v-if="isLoading")
+    aside.stats
+      .stats__item
+        .item__header
+          img(:src="Aim" class="stats__icon" alt="Точность")
+          h4.item-title Точность
+        span.item-text {{ accuracy }}%
+      .stats__item
+        .item__header
+          img(:src="Speed" class="stats__icon" alt="Скорость")
+          h4.item-title Скорость
+        span.item-text {{ speed }} зн/мин
+      the-button(@resetEverything="resetEverything") Заново
+      teleport(to="body")
+        transition
+          the-modal(v-if="isModal" :cardsState="cardsState" @resetEverything="resetEverything")
 </template>
 
 <script setup>
@@ -33,6 +34,7 @@ import TheLetter  from "@/components/TheLetter.vue";
 import TheButton from "@/components/ui/PrimaryButton.vue";
 import AppLoader from "@/components/ui/AppLoader.vue";
 import TheModal from "@/components/modals/TheModal.vue";
+import Layout from "@/layout/default.vue";
 //icons
 import Aim from "@/assets/icons/aim.svg";
 import Speed from "@/assets/icons/speed.svg";
@@ -70,7 +72,7 @@ const cardsState = {
 }
 
 const input = ref("");
-const target = ref(null);
+const trainer__input = ref(null);
 const speed = ref("0");
 let timer;
 let isErrorAgain = false;
@@ -103,11 +105,11 @@ function resetEverything() {
   isModal.value = false;
 
   store.dispatch(actionTypes.getText);
-  target.value.focus();
+  trainer__input.value.focus();
 }
 onMounted(() => {
   store.dispatch(actionTypes.getText)
-  target.value.focus();
+  trainer__input.value.focus();
 });
 
 function onInput(event) {
@@ -130,7 +132,7 @@ function onInput(event) {
     input.value = "";
 
     store.commit(mutationsTypes.clearAllStatuses);
-    target.value.focus();
+    trainer__input.value.focus();
     return
   }
 
@@ -151,7 +153,7 @@ function onInput(event) {
       return;
     }
 
-    target.value.focus();
+    trainer__input.value.focus();
     return null;
   }
 
@@ -169,25 +171,26 @@ function onInput(event) {
     index: idx,
     status: "correct"
   });
-  target.value.focus();
+  trainer__input.value.focus();
 }
 </script>
 
 <style lang="sass" >
-.flex
-  display: flex
-  margin: 20px auto
-  max-width: 900px
-  box-shadow: 0 0 10px 0 #999
-  background-color: rgba(255,255,255, 0.3)
-  gap: 10px
-.text
-  flex-basis: 80%
-  padding: 20px
-  font-size: 22px
-  border-radius: 5px
-  letter-spacing: 5px
-  position: relative
+.trainer
+  &__hero
+    display: flex
+    margin: 20px auto
+    max-width: 900px
+    box-shadow: 0 0 10px 0 #999
+    background-color: rgba(255,255,255, 0.3)
+    gap: 10px
+  &__text
+    flex-basis: 80%
+    padding: 20px
+    font-size: 22px
+    border-radius: 5px
+    letter-spacing: 5px
+    position: relative
   &__target
     font-size: 16px
     overflow: hidden

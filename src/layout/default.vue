@@ -6,26 +6,51 @@
           class="main__link"
           :to="{name: 'Welcome'}"
         ) {{ logo }}
-  main.main
-
+  slot
 </template>
 
 <script setup>
 const logo = "NewGen vision";
 </script>
 
-<style scoped lang="sass">
+<style lang="sass">
 .wrapper
   background-color: #123553
   position: fixed
   width: 100vw
   height: 100vh
-
-&__logo
+.header
+  max-width: 1400px
+  margin: 0 auto
+  &__logo
     font-style: normal
     font-weight: 900
     font-size: 40px
     line-height: 60px
     color: white
     animation: logo 0.5s ease-in-out
+    transition: opacity .2s ease-in-out
+    padding: 10px 0
+    &:hover
+      opacity: .7
+    & a
+      text-decoration: none
+.main
+  width: 1400px
+  background: linear-gradient(90deg, #09203F 0%, #537895 100%)
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  border-radius: 5px
+
+@keyframes logo
+  0%
+    opacity: 0
+    transform: translateY(-200px)
+
+  100%
+    opacity: 1
+    transform: translateY(0)
+
 </style>
