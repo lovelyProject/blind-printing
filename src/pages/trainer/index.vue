@@ -1,13 +1,12 @@
 <template lang="pug">
-layout
-  main.trainer
-  section.trainer__hero
-    main.trainer__text(v-if="textState")
-      the-letter(v-for="({status, value}, index) in textState" :key="index" :status="status") {{ value }}
+main.trainer
+  section.trainer__hero(v-if="letters")
+    main.trainer__text
+      the-letter(v-for="({status, value}, index) in letters" :key="index" :status="status") {{ value }}
       input.trainer__target(
           type="text"
           :value="input"
-          ref="trainer__input"
+          ref="inputElement"
           @input="onInput"
       )
       app-loader(v-if="isLoading")
@@ -22,10 +21,10 @@ layout
           img(:src="Speed" class="stats__icon" alt="Скорость")
           h4.item-title Скорость
         span.item-text {{ speed }} зн/мин
-      the-button(@resetEverything="resetEverything") Заново
+      the-button(@reset="reset") Заново
       teleport(to="body")
         transition
-          the-modal(v-if="isModal" :cardsState="cardsState" @resetEverything="resetEverything")
+          the-modal(v-if="isModal" :cards="cards" @reset="reset")
 </template>
 
 <script setup>
@@ -34,17 +33,37 @@ import TheLetter  from "@/components/TheLetter.vue";
 import TheButton from "@/components/ui/PrimaryButton.vue";
 import AppLoader from "@/components/ui/AppLoader.vue";
 import TheModal from "@/components/modals/TheModal.vue";
-import Layout from "@/layout/default.vue";
+
 //icons
 import Aim from "@/assets/icons/aim.svg";
 import Speed from "@/assets/icons/speed.svg";
 import Time from "@/assets/icons/time.svg";
 
+//helpers
+import getDifferenceInSeconds from "@/helpers/getDifferenceInSeconds"
+import getSpeed from "@/helpers/getSpeed.js";
+
 import { onMounted, ref, computed } from "vue";
-import { actionTypes, mutationsTypes } from "@/store/modules/trainerStore.js";
+import { actionTypes, mutationsTypes } from "@/store/trainer/index.js";
 import { useStore } from 'vuex'
 
-const cardsState = {
+const store = useStore();
+
+
+const isLoading = computed(() => store.state.textServiceStore.isLoading);
+const letters = computed(() => store.state.textServiceStore?.letters);
+const lettersArray = computed(() => store.state.textServiceStore?.lettersArray);
+//100 значение точности по умолчанию
+const error = computed(() => {
+  return (store.state.textServiceStore.countErrors * 100 / lettersArray.value.length).toFixed(2)
+});
+const accuracy = computed(() => {
+  return isNaN(Number(error.value)) ? 100 : 100 - error.value
+});
+
+const startPrintingTime = computed(() => store.state.textServiceStore.startPrintingTime);
+
+const cards = {
   accuracy:  {
     id: 1,
     title: "Точность",
@@ -72,67 +91,46 @@ const cardsState = {
 }
 
 const input = ref("");
-const trainer__input = ref(null);
+const inputElement = ref(null);
 const speed = ref("0");
 let timer;
-let isErrorAgain = false;
+let isError = false;
 let isModal = ref(false);
 
-const store = useStore();
-const isLoading = computed(() => store.state.textServiceStore.isLoading);
-const textState = computed(() => store.state.textServiceStore?.textState);
-const textFromService = computed(() => store.state.textServiceStore?.textFromService);
-//100 значение точности по умолчанию
-const errorPercents = computed(() => (store.state.textServiceStore.countErrors * 100 / textFromService.value.length).toFixed(2));
-const accuracy = computed(() => {
-  return isNaN(Number(errorPercents.value)) ? 100 : 100 - errorPercents.value
-});
-
-const startPrintingTime = computed(() => store.state.textServiceStore.startPrintingTime);
-
-//1000 - кол-во милисекунд в 1 секунде, цифра 1 - чтобы не делить на 0
-function getDifferenceInSeconds() {
-  return startPrintingTime.value ? Math.round((new Date().getTime() - startPrintingTime.value) / 1000) : 1;
-}
-function getSpeed() {
-  return Number(input.value.length * 60 / getDifferenceInSeconds());
-}
-
-function resetEverything() {
+function reset() {
   clearInterval(timer);
   input.value = "";
   speed.value = "0";
   isModal.value = false;
 
   store.dispatch(actionTypes.getText);
-  trainer__input.value.focus();
+  inputElement.value.focus();
 }
+
 onMounted(() => {
   store.dispatch(actionTypes.getText)
-  trainer__input.value.focus();
+  inputElement.value.focus();
 });
 
 function onInput(event) {
   const newValue = event.target.value;
 
   //введен весь текст
-  if (textFromService.value.length - 1 === input.value.length) {
+  if (lettersArray.value.length - 1 === input.value.length) {
     clearInterval(timer);
-    cardsState.time.value = getDifferenceInSeconds();
-    cardsState.accuracy.value = accuracy.value;
-    cardsState.speed.value = speed.value;
+    cards.time.value = getDifferenceInSeconds(startPrintingTime.value);
+    cards.accuracy.value = accuracy.value;
+    cards.speed.value = speed.value;
 
     isModal.value = true
-    // store.dispatch(actionTypes.getText);
-    // input.value = "";
-    // target.value.focus();
   }
+
   //вся строка инпута удалена
   if (newValue === "") {
     input.value = "";
 
     store.commit(mutationsTypes.clearAllStatuses);
-    trainer__input.value.focus();
+    inputElement.value.focus();
     return
   }
 
@@ -140,11 +138,11 @@ function onInput(event) {
   input.value = newValue;
 
 //Если значения не совпадают, то в инпут ничего не вводится
-  if (textState.value[idx].value.toLowerCase() !== newValue[idx].toLowerCase()) {
+  if (letters.value[idx].value !== newValue[idx]) {
     input.value = newValue.slice(0, -1);
 
-    if (!isErrorAgain) {
-      isErrorAgain = true;
+    if (!isError) {
+      isError = true;
       store.commit(mutationsTypes.changeLetterStatus, {
         index: idx,
         status: "error"
@@ -153,7 +151,7 @@ function onInput(event) {
       return;
     }
 
-    trainer__input.value.focus();
+    inputElement.value.focus();
     return null;
   }
 
@@ -162,21 +160,22 @@ function onInput(event) {
     store.commit(mutationsTypes.setStartTime);
 
     timer = setInterval(() => {
-      speed.value = Math.round(getSpeed());
+      speed.value = Math.round(getSpeed(input.value.length, startPrintingTime.value));
     }, 1000);
   }
 
-  isErrorAgain = false;
+  isError = false;
   store.commit(mutationsTypes.changeLetterStatus, {
     index: idx,
     status: "correct"
   });
-  trainer__input.value.focus();
+  inputElement.value.focus();
 }
 </script>
 
 <style lang="sass" >
 .trainer
+  margin-top: 200px
   &__hero
     display: flex
     margin: 20px auto

@@ -1,12 +1,8 @@
 <template lang="pug">
-.wrapper
+Default
   router-view
 </template>
 
-<style lang="sass">
-.wrapper
-  background-color: #123553
-  position: fixed
-  width: 100vw
-  height: 100vh
-</style>
+<script setup>
+import Default from "@/layout/default.vue"
+</script>

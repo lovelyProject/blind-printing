@@ -1,14 +1,13 @@
 <template lang="pug">
-layout
-  main.main
-    section.main__hero
-        h1.main__title {{ TITLE }}
-        p.main__text {{ TEXT }}
-        router-link(
+main.main
+  section.main__hero
+      h1.main__title {{ TITLE }}
+      p.main__text {{ TEXT }}
+      router-link(
           class="main__link"
           :to="{name: 'Main'}"
-        )
-          app-button Начать
+      )
+        app-button Начать
 </template>
 
 <script setup>

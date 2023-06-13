@@ -6,10 +6,10 @@
 
 <script setup>
 
-const emits = defineEmits(['resetEverything']);
+const emits = defineEmits(['reset']);
 
 function onButton() {
-  emits("resetEverything");
+  emits("reset");
 }
 </script>
 

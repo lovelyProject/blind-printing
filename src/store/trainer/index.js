@@ -1,11 +1,40 @@
-import serviceApi from "@/api/getTextService";
+import serviceApi from "@/api/getTextService.js";
+import Aim from "@/assets/icons/aim.svg";
+import Speed from "@/assets/icons/speed.svg";
+import Time from "@/assets/icons/time.svg";
 
 const state = {
-    textFromService: [],
-    textState: {},
+    lettersArray: [],
+    letters: {},
     isLoading: null,
     countErrors: 0,
     startPrintingTime: null,
+    cards: {
+        accuracy: {
+            id: 1,
+            title: "Точность",
+            icon: Aim,
+            alt: "Точность",
+            measure: "%",
+            value: 0
+        },
+        speed: {
+            id: 2,
+            title: "Скорость",
+            icon: Speed,
+            alt: "Скорость",
+            measure: "зн/м",
+            value: 0
+        },
+        time: {
+            id: 3,
+            title: "Время",
+            icon: Time,
+            alt: "Время",
+            measure: "cек",
+            value: 0
+        }
+    }
 };
 
 export const mutationsTypes = {
@@ -20,7 +49,7 @@ export const mutationsTypes = {
     resetErrors: "[printing] resetErrors",
     setStartTime: "[printing] setStartTime",
 
-    resetEverything: "[printing] resetEverything"
+    reset: "[printing] reset"
 };
 export const actionTypes = {
     getText: "[printing] getText"
@@ -31,9 +60,9 @@ const mutations = {
     },
     [mutationsTypes.getTextSuccess]: (state, payload) => {
         state.isLoading = false;
-        state.textFromService = payload[0].split("");
-        state.textFromService.forEach((el, idx) => {
-            state.textState[idx] = {
+        state.lettersArray = payload[0].split("");
+        state.lettersArray.forEach((el, idx) => {
+            state.letters[idx] = {
                 value: el,
                 status: 'no-touch'
             };
@@ -43,13 +72,13 @@ const mutations = {
         state.isLoading = false;
     },
     [mutationsTypes.clearAllStatuses]: (state) => {
-        for (const key in state.textState) {
-            state.textState[key].status = 'no-touch';
+        for (const key in state.letters) {
+            state.letters[key].status = 'no-touch';
         }
     },
     [mutationsTypes.changeLetterStatus]: (state, payload) => {
         const idx = payload.index;
-        state.textState[idx].status = payload.status;
+        state.letters[idx].status = payload.status;
     },
     [mutationsTypes.incrementErrors]: (state) => {
         state.countErrors++;
@@ -60,9 +89,9 @@ const mutations = {
     [mutationsTypes.setStartTime]: (state) => {
         state.startPrintingTime = new Date().getTime();
     },
-    [mutationsTypes.resetEverything]: (state) => {
-        state.textState = {};
-        state.textFromService = [];
+    [mutationsTypes.reset]: (state) => {
+        state.letters = {};
+        state.lettersArray = [];
     }
 };
 
@@ -72,7 +101,7 @@ const actions = {
         return new Promise(() => {
             context.commit(mutationsTypes.getTextStart);
             context.commit(mutationsTypes.resetErrors);
-            context.commit(mutationsTypes.resetEverything);
+            context.commit(mutationsTypes.reset);
             serviceApi
                 .getTextService()
                 .then((response) => context.commit(mutationsTypes.getTextSuccess, response.data))

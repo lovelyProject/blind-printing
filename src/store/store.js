@@ -1,15 +1,10 @@
 import { createStore } from "vuex";
-import textServiceStore from "@/store/modules/trainerStore.js";
+import textServiceStore from "@/store/trainer/index.js";
 
 
-const store = createStore({
-    state: {},
-    getters: {},
-    mutations: {},
-    actions: {},
+export default createStore({
     modules: {
         textServiceStore
     },
 });
 
-export default store;

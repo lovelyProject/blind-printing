@@ -6,17 +6,17 @@ import AppButton from "@/components/ui/PrimaryButton.vue";
 import Firework from "@/assets/icons/firework.svg";
 
 defineProps({
-  cardsState: {
+  cards: {
     type: Object,
     required: true
   }
 })
-const emits = defineEmits(['resetEverything']);
-function resetEverything() {
-  emits("resetEverything");
+const emits = defineEmits(['reset']);
+function reset() {
+  emits("reset");
 }
 
-const congratulationText = `Вы успешно перепечатали текст.
+const CONGRATULATIONS = `Вы успешно перепечатали текст.
 Вот ваши результаты:`;
 
 </script>
@@ -27,12 +27,10 @@ const congratulationText = `Вы успешно перепечатали тек�
       .modal__box
         img(:src="Firework" class="modal__icon")
         h2.color-black.modal__title Поздравляем!
-        p.color-black.modal__text {{ congratulationText }}
-        the-card(v-for="card in cardsState" :key="card.id" :card="card")
-        app-button(@resetEverything="resetEverything") Начать заново
+        p.color-black.modal__text {{ CONGRATULATIONS }}
+        the-card(v-for="card in cards" :key="card.id" :card="card")
+        app-button(@reset="reset") Начать заново
 </template>
-
-
 
 <style scoped lang="sass">
 .color-black
