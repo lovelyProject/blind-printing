@@ -16,7 +16,7 @@ main.main
 
 <script setup>
 //components
-import AppButton from "@/components/ui/AppButton.vue";
+import AppButton from "@/components/ui/PrimaryButton.vue";
 
 const TITLE = "Учись набирать текст на клавиатуре вслепую";
 const TEXT = "Набор текста вслепую, или набор текста всеми десятью пальцами, не глядя на клавиатуру, " +

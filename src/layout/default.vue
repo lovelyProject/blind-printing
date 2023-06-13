@@ -6,7 +6,7 @@
           class="main__link"
           :to="{name: 'Welcome'}"
         ) {{ logo }}
-
+  main.main
 
 </template>
 

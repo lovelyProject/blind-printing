@@ -1,7 +1,7 @@
 <script setup>
 //components
 import TheCard from "@/components/modals/card/TheCard.vue";
-import AppButton from "@/components/ui/AppButton.vue";
+import AppButton from "@/components/ui/PrimaryButton.vue";
 //icon
 import Firework from "@/assets/icons/firework.svg";
 

@@ -1,6 +1,6 @@
 <template lang="pug">
-div.flex
-  .text
+section.flex
+  main.text
     template(v-if="textState")
       the-letter(v-for="({status, value}, index) in textState" :key="index" :status="status") {{ value }}
       input.text__target(
@@ -10,7 +10,7 @@ div.flex
           @input="onInput"
       )
     app-loader(v-if="isLoading")
-  .stats
+  aside.stats
     .stats__item
       .item__header
         img(:src="Aim" class="stats__icon" alt="Точность")
@@ -30,7 +30,7 @@ div.flex
 <script setup>
 //component
 import TheLetter  from "@/components/TheLetter.vue";
-import TheButton from "@/components/ui/AppButton.vue";
+import TheButton from "@/components/ui/PrimaryButton.vue";
 import AppLoader from "@/components/ui/AppLoader.vue";
 import TheModal from "@/components/modals/TheModal.vue";
 //icons

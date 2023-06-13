@@ -15,9 +15,7 @@ function onButton() {
 
 <style scoped lang="sass">
 $orange: #F57359
-$black: #000
 $white: #fff
-$gray: #999
 
 .button
   display: flex
@@ -31,7 +29,7 @@ $gray: #999
     margin: 20px auto 0
     cursor: pointer
     border: 1px solid transparent
-    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out
+    transition: background-color .4s ease-in-out, transform 0.1s ease-in-out
     font-size: 20px
     &:active
       transform: translateY(2px)
@@ -40,4 +38,5 @@ $gray: #999
       background-color: $white
       border-color: $orange
       box-shadow: 0 0 20px 0 $orange
+      transform: translateY(-2px)
 </style>
