@@ -3,6 +3,7 @@ import Aim from "@/assets/icons/aim.svg";
 import Speed from "@/assets/icons/speed.svg";
 import Time from "@/assets/icons/time.svg";
 import getSpeed from "@/helpers/getSpeed.js";
+import getDifferenceInSeconds from "@/helpers/getDifferenceInSeconds.js";
 
 const state = {
     lettersArray: [],
@@ -54,14 +55,15 @@ export const mutationsTypes = {
     resetErrors: "[printing] resetErrors",
     setStartTime: "[printing] setStartTime",
     reset: "[printing] reset",
-    set_accuracy: "[printing] set accuracy",
-    set_time: "[printing] set time",
-    set_speed: "[printing] set speed",
+    setAccuracy: "[printing] set accuracy",
+    setTime: "[printing] set time",
+    setSpeed: "[printing] set speed",
     toggleModal: "[printing] toggleModal",
     isErrorToggle: "[printing] isErrorToggle",
     setInput: "[printing] setInput",
     resetTimer: "[printing] resetTimer",
-    setTimer: "[printing] setTimer"
+    setTimer: "[printing] setTimer",
+
 };
 export const actionTypes = {
     getText: "[printing] getText",
@@ -107,13 +109,13 @@ const mutations = {
         state.letters = {};
         state.lettersArray = [];
     },
-    [mutationsTypes.set_accuracy]: (state, payload) => {
+    [mutationsTypes.setAccuracy]: (state, payload) => {
         state.cards.accuracy.value = payload;
     },
-    [mutationsTypes.set_time]: (state, payload) => {
-        state.cards.time.value = payload;
+    [mutationsTypes.setTime]: (state) => {
+        state.cards.time.value = getDifferenceInSeconds(state.startPrintingTime);
     },
-    [mutationsTypes.set_speed]: (state, payload) => {
+    [mutationsTypes.setSpeed]: (state, payload) => {
         state.cards.speed.value = payload;
         state.speed = payload;
     },
@@ -147,18 +149,15 @@ const actions = {
                 })
         })
     },
-    [actionTypes.reset](context) {
-
-    },
     [actionTypes.setTimer](context) {
         return new Promise(() => {
             context.commit(mutationsTypes.setStartTime);
 
             state.timer = setInterval(() => {
-                context.commit(mutationsTypes.set_speed, Math.round(getSpeed(state.input.length, state.startPrintingTime)));
+                context.commit(mutationsTypes.setSpeed, Math.round(getSpeed(state.input.length, state.startPrintingTime)));
             }, 1000);
         })
-    }
+    },
 };
 
 export default {

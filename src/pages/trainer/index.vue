@@ -38,10 +38,6 @@ import TheModal from "@/components/modals/TheModal.vue";
 import Aim from "@/assets/icons/aim.svg";
 import Speed from "@/assets/icons/speed.svg";
 
-//helpers
-import getDifferenceInSeconds from "@/helpers/getDifferenceInSeconds"
-import getSpeed from "@/helpers/getSpeed.js";
-
 import { onMounted, ref, computed } from "vue";
 import { actionTypes, mutationsTypes } from "@/store/trainer/index.js";
 import { useStore } from 'vuex'
@@ -61,19 +57,14 @@ const error = computed(() => {
 const accuracy = computed(() => {
   return isNaN(Number(error.value)) ? 100 : 100 - error.value
 });
-const startPrintingTime = computed(() => store.state.trainer.startPrintingTime);
 const input = computed(() => store.state.trainer.input);
 const speed = computed(() => store.state.trainer.speed);
-const timer = computed(() => store.state.trainer.timer);
 
 const inputElement = ref(null);
-
-// let timer;
-
 function reset() {
   store.commit(mutationsTypes.resetTimer);
   store.commit(mutationsTypes.setInput, "");
-  store.commit(mutationsTypes.set_speed, "0");
+  store.commit(mutationsTypes.setSpeed, "0");
   store.commit(mutationsTypes.toggleModal, false);
 
   store.dispatch(actionTypes.getText);
@@ -91,9 +82,9 @@ function onInput(event) {
   //введен весь текст
   if (lettersArray.value.length - 1 === input.value.length) {
     store.commit(mutationsTypes.resetTimer);
-    store.commit(mutationsTypes.set_time, getDifferenceInSeconds(startPrintingTime.value));
-    store.commit(mutationsTypes.set_accuracy, accuracy.value)
-    store.commit(mutationsTypes.set_speed, speed.value)
+    store.commit(mutationsTypes.setTime);
+    store.commit(mutationsTypes.setAccuracy, accuracy.value)
+    store.commit(mutationsTypes.setSpeed, speed.value)
 
     store.commit(mutationsTypes.toggleModal, true);
   }
@@ -107,17 +98,17 @@ function onInput(event) {
     return
   }
 
-  const idx = newValue.length - 1;
+  const index = newValue.length - 1;
   store.commit(mutationsTypes.setInput, newValue);
 
 //Если значения не совпадают, то в инпут ничего не вводится
-  if (letters.value[idx].value !== newValue[idx]) {
+  if (letters.value[index].value !== newValue[index]) {
     store.commit(mutationsTypes.setInput, newValue.slice(0, -1));
 
     if (!isError.value) {
       store.commit(mutationsTypes.isErrorToggle, true);
       store.commit(mutationsTypes.changeLetterStatus, {
-        index: idx,
+        index: index,
         status: "error"
       });
 
@@ -136,7 +127,7 @@ function onInput(event) {
 
   store.commit(mutationsTypes.isErrorToggle, false);
   store.commit(mutationsTypes.changeLetterStatus, {
-    index: idx,
+    index: index,
     status: "correct"
   });
 
