@@ -83,7 +83,4 @@ const logo = "NewGen vision";
 @media screen and (width < 1200px)
   .main
     width: 900px
-    &__title,
-    &__text
-      text-shadow: 3px 3px 3px white
 </style>

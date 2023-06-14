@@ -29,7 +29,7 @@ main.trainer
 
 <script setup>
 //component
-import TheLetter  from "@/components/TheLetter.vue";
+import TheLetter  from "@/components/trainer/TheLetter.vue";
 import TheButton from "@/components/ui/PrimaryButton.vue";
 import AppLoader from "@/components/ui/AppLoader.vue";
 import TheModal from "@/components/modals/TheModal.vue";
@@ -54,6 +54,7 @@ const lettersArray = computed(() => store.state.trainer?.lettersArray);
 const error = computed(() => {
   return (store.state.trainer.countErrors * 100 / lettersArray.value.length).toFixed(2)
 });
+//если NaN, то значит первая буква не введена,поэтому возвращаем 100, иначе 100 - % ошибки
 const accuracy = computed(() => {
   return isNaN(Number(error.value)) ? 100 : 100 - error.value
 });
@@ -61,6 +62,7 @@ const input = computed(() => store.state.trainer.input);
 const speed = computed(() => store.state.trainer.speed);
 
 const inputElement = ref(null);
+
 function reset() {
   store.commit(mutationsTypes.resetTimer);
   store.commit(mutationsTypes.setInput, "");
@@ -138,6 +140,7 @@ function onInput(event) {
 <style lang="sass" >
 .trainer
   margin-top: 200px
+  padding: 0 40px
   &__hero
     display: flex
     margin: 20px auto
@@ -206,5 +209,16 @@ function onInput(event) {
 .v-leave-to
   opacity: 0
 
-
+@media screen and (width < 900px)
+  .trainer
+    margin-top: 70px
+    &__text
+      font-size: 18px
+      min-height: 300px
+    &__hero
+      display: block
+  .item__header
+    justify-content: center
+  .stats__item
+    padding: 10px
 </style>

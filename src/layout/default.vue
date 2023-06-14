@@ -30,7 +30,7 @@ const logo = "NewGen vision";
     color: white
     animation: logo 0.5s ease-in-out
     transition: opacity .2s ease-in-out
-    padding: 10px 0
+    padding: 10px 40px
     &:hover
       opacity: .7
     & a
