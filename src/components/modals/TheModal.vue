@@ -89,4 +89,7 @@ const CONGRATULATIONS = `Вы успешно перепечатали текст
 
   100%
     transform: scale(1)
+@media screen and (width < 800)
+  .modal__box
+    max-width: 500px
 </style>
