@@ -37,7 +37,6 @@ import TheModal from "@/components/modals/TheModal.vue";
 //icons
 import Aim from "@/assets/icons/aim.svg";
 import Speed from "@/assets/icons/speed.svg";
-import Time from "@/assets/icons/time.svg";
 
 //helpers
 import getDifferenceInSeconds from "@/helpers/getDifferenceInSeconds"
@@ -65,13 +64,14 @@ const accuracy = computed(() => {
 const startPrintingTime = computed(() => store.state.trainer.startPrintingTime);
 const input = computed(() => store.state.trainer.input);
 const speed = computed(() => store.state.trainer.speed);
+const timer = computed(() => store.state.trainer.timer);
 
 const inputElement = ref(null);
-// const speed = ref("0");
-let timer;
+
+// let timer;
 
 function reset() {
-  clearInterval(timer);
+  store.commit(mutationsTypes.resetTimer);
   store.commit(mutationsTypes.setInput, "");
   store.commit(mutationsTypes.set_speed, "0");
   store.commit(mutationsTypes.toggleModal, false);
@@ -90,7 +90,7 @@ function onInput(event) {
 
   //введен весь текст
   if (lettersArray.value.length - 1 === input.value.length) {
-    clearInterval(timer);
+    store.commit(mutationsTypes.resetTimer);
     store.commit(mutationsTypes.set_time, getDifferenceInSeconds(startPrintingTime.value));
     store.commit(mutationsTypes.set_accuracy, accuracy.value)
     store.commit(mutationsTypes.set_speed, speed.value)
@@ -101,8 +101,8 @@ function onInput(event) {
   //вся строка инпута удалена
   if (newValue === "") {
     store.commit(mutationsTypes.setInput, "");
-
     store.commit(mutationsTypes.clearAllStatuses);
+
     inputElement.value.focus();
     return
   }
@@ -131,11 +131,7 @@ function onInput(event) {
 
   //запуск счетчика и вычисления скорости
   if (input.value.length === 1) {
-    store.commit(mutationsTypes.setStartTime);
-
-    timer = setInterval(() => {
-      store.commit(mutationsTypes.set_speed, Math.round(getSpeed(input.value.length, startPrintingTime.value)));
-    }, 1000);
+    store.dispatch(actionTypes.setTimer);
   }
 
   store.commit(mutationsTypes.isErrorToggle, false);

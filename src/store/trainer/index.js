@@ -2,6 +2,7 @@ import serviceApi from "@/api/getTextService.js";
 import Aim from "@/assets/icons/aim.svg";
 import Speed from "@/assets/icons/speed.svg";
 import Time from "@/assets/icons/time.svg";
+import getSpeed from "@/helpers/getSpeed.js";
 
 const state = {
     lettersArray: [],
@@ -59,9 +60,13 @@ export const mutationsTypes = {
     toggleModal: "[printing] toggleModal",
     isErrorToggle: "[printing] isErrorToggle",
     setInput: "[printing] setInput",
+    resetTimer: "[printing] resetTimer",
+    setTimer: "[printing] setTimer"
 };
 export const actionTypes = {
-    getText: "[printing] getText"
+    getText: "[printing] getText",
+    reset: "[printing] reset",
+    setTimer: "[printing] setTimer",
 };
 const mutations = {
     [mutationsTypes.getTextStart]: (state) => {
@@ -120,7 +125,10 @@ const mutations = {
     },
     [mutationsTypes.setInput]: (state, payload) => {
         state.input = payload;
-    }
+    },
+    [mutationsTypes.resetTimer]: (state) => {
+        clearInterval(state.timer);
+    },
 };
 
 
@@ -137,6 +145,18 @@ const actions = {
                     console.log("errors:", error);
                     context.commit(mutationsTypes.getTextFailure);
                 })
+        })
+    },
+    [actionTypes.reset](context) {
+
+    },
+    [actionTypes.setTimer](context) {
+        return new Promise(() => {
+            context.commit(mutationsTypes.setStartTime);
+
+            state.timer = setInterval(() => {
+                context.commit(mutationsTypes.set_speed, Math.round(getSpeed(state.input.length, state.startPrintingTime)));
+            }, 1000);
         })
     }
 };
