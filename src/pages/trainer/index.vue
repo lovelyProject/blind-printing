@@ -63,16 +63,17 @@ const accuracy = computed(() => {
   return isNaN(Number(error.value)) ? 100 : 100 - error.value
 });
 const startPrintingTime = computed(() => store.state.trainer.startPrintingTime);
+const input = computed(() => store.state.trainer.input);
+const speed = computed(() => store.state.trainer.speed);
 
-const input = ref("");
 const inputElement = ref(null);
-const speed = ref("0");
+// const speed = ref("0");
 let timer;
 
 function reset() {
   clearInterval(timer);
-  input.value = "";
-  speed.value = "0";
+  store.commit(mutationsTypes.setInput, "");
+  store.commit(mutationsTypes.set_speed, "0");
   store.commit(mutationsTypes.toggleModal, false);
 
   store.dispatch(actionTypes.getText);
@@ -99,7 +100,7 @@ function onInput(event) {
 
   //вся строка инпута удалена
   if (newValue === "") {
-    input.value = "";
+    store.commit(mutationsTypes.setInput, "");
 
     store.commit(mutationsTypes.clearAllStatuses);
     inputElement.value.focus();
@@ -107,11 +108,11 @@ function onInput(event) {
   }
 
   const idx = newValue.length - 1;
-  input.value = newValue;
+  store.commit(mutationsTypes.setInput, newValue);
 
 //Если значения не совпадают, то в инпут ничего не вводится
   if (letters.value[idx].value !== newValue[idx]) {
-    input.value = newValue.slice(0, -1);
+    store.commit(mutationsTypes.setInput, newValue.slice(0, -1));
 
     if (!isError.value) {
       store.commit(mutationsTypes.isErrorToggle, true);
@@ -133,7 +134,7 @@ function onInput(event) {
     store.commit(mutationsTypes.setStartTime);
 
     timer = setInterval(() => {
-      speed.value = Math.round(getSpeed(input.value.length, startPrintingTime.value));
+      store.commit(mutationsTypes.set_speed, Math.round(getSpeed(input.value.length, startPrintingTime.value)));
     }, 1000);
   }
 

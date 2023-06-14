@@ -49,20 +49,16 @@ export const mutationsTypes = {
 
     changeLetterStatus: "[printing] changeLetterStatus",
     clearAllStatuses: "[printing] clearAllStatuses",
-
     incrementErrors: "[printing] incrementErrors",
     resetErrors: "[printing] resetErrors",
     setStartTime: "[printing] setStartTime",
-
     reset: "[printing] reset",
-
     set_accuracy: "[printing] set accuracy",
     set_time: "[printing] set time",
     set_speed: "[printing] set speed",
-
     toggleModal: "[printing] toggleModal",
-
     isErrorToggle: "[printing] isErrorToggle",
+    setInput: "[printing] setInput",
 };
 export const actionTypes = {
     getText: "[printing] getText"
@@ -114,12 +110,16 @@ const mutations = {
     },
     [mutationsTypes.set_speed]: (state, payload) => {
         state.cards.speed.value = payload;
+        state.speed = payload;
     },
     [mutationsTypes.toggleModal]: (state, payload) => {
         state.isModal = payload;
     },
     [mutationsTypes.isErrorToggle]: (state, payload) => {
         state.isError = payload;
+    },
+    [mutationsTypes.setInput]: (state, payload) => {
+        state.input = payload;
     }
 };
 
