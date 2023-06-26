@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
 export default defineConfig({
-    base: "blind-printing",
+  base: "blind-printing",
   plugins: [vue()],
   resolve: {
     alias: {
@@ -12,8 +12,10 @@ export default defineConfig({
   },
   css: {
     preprocessorOptions: {
-      scss: {
-        additionalData: `@import "@/assets/styles/index.scss" as global`
+      sass: {
+        additionalData: `
+          @import "./src/assets/styles/index.sass"
+        `
       }
     },
   },

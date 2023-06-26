@@ -23,7 +23,7 @@ const CONGRATULATIONS = `Вы успешно перепечатали текст
 
 <template lang="pug">
 .modal
-  transition(name="modal")
+  transition(name="modal" appear)
       .modal__box
         img(:src="Firework" class="modal__icon")
         h2.color-black.modal__title Поздравляем!
@@ -34,7 +34,7 @@ const CONGRATULATIONS = `Вы успешно перепечатали текст
 
 <style scoped lang="sass">
 .color-black
-  color: black
+  color: $black
 .modal
   position: fixed
   left: 0
@@ -42,7 +42,7 @@ const CONGRATULATIONS = `Вы успешно перепечатали текст
   width: 100vw
   height: 100vh
   z-index: 2
-  background-color: rgba(0,0,0, .3)
+  background-color: rgba($black, .3)
   display: grid
   align-items: center
   justify-content: center
@@ -67,7 +67,7 @@ const CONGRATULATIONS = `Вы успешно перепечатали текст
   &__icon
     width: 158px
     border-radius: 50%
-    box-shadow: 0 0 10px 0 #999
+    box-shadow: 0 0 10px 0 $gray
     padding: 31px
     position: absolute
     z-index: 4

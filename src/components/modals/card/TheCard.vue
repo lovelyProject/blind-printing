@@ -19,7 +19,7 @@ defineProps({
 
 <style scoped lang="sass">
 .card
-  box-shadow: 0 0 10px 0 #999
+  box-shadow: 0 0 10px 0 $gray
   padding: 20px
   border-radius: 5px
   display: flex

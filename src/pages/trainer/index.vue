@@ -152,7 +152,7 @@ function onInput(event) {
     display: flex
     margin: 20px auto
     max-width: 900px
-    box-shadow: 0 0 10px 0 #999
+    box-shadow: 0 0 10px 0 $gray
     background-color: rgba(255,255,255, 0.3)
     gap: 10px
   &__text

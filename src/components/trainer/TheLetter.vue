@@ -23,9 +23,6 @@ const letterClasses = computed(() => {
 </script>
 
 <style scoped lang="sass">
-$green-regular: #2ED47A
-$red-regular: #F7685B
-
 .letter
   text-align: center
   transition: color .2s ease-in-out

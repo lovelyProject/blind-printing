@@ -15,7 +15,7 @@ const logo = "NewGen vision";
 
 <style lang="sass">
 .wrapper
-  background-color: #123553
+  background-color: $dark-blue
   position: fixed
   width: 100vw
   height: 100vh
