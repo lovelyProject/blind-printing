@@ -76,7 +76,7 @@ const mutations = {
     },
     [mutationsTypes.getTextSuccess]: (state, payload) => {
         state.isLoading = false;
-        state.lettersArray = payload[0].split("");
+        state.lettersArray = payload[0].replace(/ +/g, " ").split("");
         state.lettersArray.forEach((el, idx) => {
             state.letters[idx] = {
                 value: el,

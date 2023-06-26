@@ -11,16 +11,7 @@ main.trainer
       )
       app-loader(v-if="isLoading")
     aside.stats
-      .stats__item
-        .item__header
-          img(:src="Aim" class="stats__icon" alt="Точность")
-          h4.item-title Точность
-        span.item-text {{ accuracy }}%
-      .stats__item
-        .item__header
-          img(:src="Speed" class="stats__icon" alt="Скорость")
-          h4.item-title Скорость
-        span.item-text {{ speed }} зн/мин
+      the-stats(:state="state")
       the-button(@reset="reset") Заново
       teleport(to="body")
         transition
@@ -33,6 +24,7 @@ import TheLetter  from "@/components/trainer/TheLetter.vue";
 import TheButton from "@/components/ui/PrimaryButton.vue";
 import AppLoader from "@/components/ui/AppLoader.vue";
 import TheModal from "@/components/modals/TheModal.vue";
+import TheStats from "@/components/trainer/TheStats.vue";
 
 //icons
 import Aim from "@/assets/icons/aim.svg";
@@ -62,7 +54,22 @@ const input = computed(() => store.state.trainer.input);
 const speed = computed(() => store.state.trainer.speed);
 
 const inputElement = ref(null);
-
+const state = [
+  {
+    icon: Aim,
+    alt: "Точность",
+    get value() {
+      return `${accuracy.value} %`
+    },
+  },
+  {
+    icon: Speed,
+    alt: "Скорость",
+    get value() {
+      return `${speed.value} зн/мин`
+    },
+  }
+]
 function reset() {
   store.commit(mutationsTypes.resetTimer);
   store.commit(mutationsTypes.setInput, "");
