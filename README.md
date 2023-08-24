@@ -1,5 +1,6 @@
 ## blind-printing
 # Приложение-тренажер слепой печати
+https://lovelyproject.github.io/blind-printing/
 
 ## Сделано по аналогии с https://www.ratatype.com/ru/typing-test/test/
 
